@@ -408,49 +408,27 @@
         <div class="row">
           <div class="col-lg-6 mb-5 mb-lg-0">
             <div class="contact-form">
-              <form>
-                <div class="row g-3">
-                  <div class="col-md-6">
-                    <input
-                      type="text"
-                      class="form-control"
-                      placeholder="First Name"
-                      required />
-                  </div>
-                  <div class="col-md-6">
-                    <input
-                      type="text"
-                      class="form-control"
-                      placeholder="Last Name"
-                      required />
-                  </div>
-                  <div class="col-12">
-                    <input
-                      type="email"
-                      class="form-control"
-                      placeholder="Email Address"
-                      required />
-                  </div>
-                  <div class="col-12">
-                    <input
-                      type="text"
-                      class="form-control"
-                      placeholder="Subject" />
-                  </div>
-                  <div class="col-12">
-                    <textarea
-                      class="form-control"
-                      rows="5"
-                      placeholder="Your Message"
-                      required></textarea>
-                  </div>
-                  <div class="col-12">
-                    <button type="submit" class="btn btn-primary w-100">
-                      Send Message
-                    </button>
-                  </div>
-                </div>
-              </form>
+<form id="contactForm" class="row g-3">
+  <div class="col-md-6">
+    <input type="text" class="form-control" name="firstName" placeholder="First Name" required />
+  </div>
+  <div class="col-md-6">
+    <input type="text" class="form-control" name="lastName" placeholder="Last Name" required />
+  </div>
+  <div class="col-12">
+    <input type="email" class="form-control" name="email" placeholder="Email Address" required />
+  </div>
+  <div class="col-12">
+    <input type="text" class="form-control" name="subject" placeholder="Subject" />
+  </div>
+  <div class="col-12">
+    <textarea class="form-control" name="message" rows="5" placeholder="Your Message" required></textarea>
+  </div>
+  <div class="col-12">
+    <button type="submit" class="btn btn-primary w-100">Send Message</button>
+  </div>
+</form>
+
             </div>
           </div>
           <div class="col-lg-6">
@@ -546,6 +524,39 @@
       toggle.addEventListener("click", () => {
         document.body.classList.toggle("dark-mode");
       });
+
+
+document.getElementById('contactForm').addEventListener('submit', async function (e) {
+    e.preventDefault();
+    const form = e.target;
+
+    const data = {
+      firstName: form.firstName.value,
+      lastName: form.lastName.value,
+      email: form.email.value,
+      subject: form.subject.value,
+      message: form.message.value
+    };
+
+    try {
+      const res = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+      });
+
+      const result = await res.json();
+      if (res.ok) {
+        alert('✅ Message sent successfully!');
+        form.reset();
+      } else {
+        alert('❌ Failed to send: ' + result.message);
+      }
+    } catch (err) {
+      alert('❌ Error sending form. Check console.');
+      console.error(err);
+    }
+  });
     </script>
   </body>
 </html>
